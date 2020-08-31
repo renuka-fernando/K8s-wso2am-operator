@@ -427,7 +427,7 @@ data:
                 idleTimeout: 60000
                 isAutoCommit: false
                 jdbcUrl: "jdbc:mysql://mysql-svc:3306/WSO2_CLUSTER_DB?useSSL=false"
-                maxPoolSize: 10
+                maxPoolSize: 50
                 password: wso2carbon
                 username: wso2carbon
                 validationTimeout: 30000
@@ -445,7 +445,7 @@ data:
                 idleTimeout: 60000
                 isAutoCommit: false
                 jdbcUrl: "jdbc:mysql://mysql-svc:3306/PERSISTENCE_DB?useSSL=false"
-                maxPoolSize: 10
+                maxPoolSize: 50
                 password: wso2carbon
                 username: wso2carbon
                 validationTimeout: 30000

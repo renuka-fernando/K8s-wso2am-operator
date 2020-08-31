@@ -36,7 +36,6 @@ data:
     #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     #  See the License for the specific language governing permissions and
     #  limitations under the License.
-
     # ----------------------------------------------------------------------------
     # Main Script for the WSO2 Carbon Server
     #
@@ -53,10 +52,8 @@ data:
     #
     # NOTE: Borrowed generously from Apache Tomcat startup scripts.
     # -----------------------------------------------------------------------------
-
     # OS specific support.  $var _must_ be set to either true or false.
     #ulimit -n 100000
-
     cygwin=false;
     darwin=false;
     os400=false;
@@ -76,10 +73,8 @@ data:
                fi
                ;;
     esac
-
     # resolve links - $0 may be a softlink
     PRG="$0"
-
     while [ -h "$PRG" ]; do
       ls=`ls -ld "$PRG"`
       link=`expr "$ls" : '.*-> \(.*\)$'`
@@ -89,26 +84,20 @@ data:
         PRG=`dirname "$PRG"`/"$link"
       fi
     done
-
     # Get standard environment variables
     TEMPCURDIR=`dirname "$PRG"`
-
     # Only set RUNTIME_HOME if not already set
     [ -z "$RUNTIME_HOME" ] && RUNTIME_HOME=`cd "$TEMPCURDIR/.." ; pwd`
-
     # Only set CARBON_HOME if not already set
     [ -z "$CARBON_HOME" ] && CARBON_HOME=`cd "$TEMPCURDIR/../../../" ; pwd`
-
     # Only set RUNTIME if not already set
     [ -z "$RUNTIME" ] && RUNTIME=${RUNTIME_HOME##*/}
-
     # For Cygwin, ensure paths are in UNIX format before anything is touched
     if $cygwin; then
       [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
       [ -n "$CARBON_HOME" ] && CARBON_HOME=`cygpath --unix "$CARBON_HOME"`
       [ -n "$RUNTIME_HOME" ] && RUNTIME_HOME=`cygpath --unix "$RUNTIME_HOME"`
     fi
-
     # For OS400
     if $os400; then
       # Set job priority to standard for interactive (interactive - 6) by using
@@ -116,12 +105,10 @@ data:
       # will be running at the same priority as interactive jobs.
       COMMAND='chgjob job('$JOBNAME') runpty(6)'
       system $COMMAND
-
       # Enable multi threading
       QIBM_MULTI_THREADED=Y
       export QIBM_MULTI_THREADED
     fi
-
     # For Migwn, ensure paths are in UNIX format before anything is touched
     if $mingw ; then
       [ -n "$CARBON_HOME" ] &&
@@ -130,7 +117,6 @@ data:
         JAVA_HOME="`(cd "$JAVA_HOME"; pwd)`"
       # TODO classpath?
     fi
-
     if [ -z "$JAVACMD" ] ; then
       if [ -n "$JAVA_HOME"  ] ; then
         if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
@@ -143,23 +129,19 @@ data:
         JAVACMD=java
       fi
     fi
-
     if [ ! -x "$JAVACMD" ] ; then
       echo "Error: JAVA_HOME is not defined correctly."
       echo " CARBON cannot execute $JAVACMD"
       exit 1
     fi
-
     # if JAVA_HOME is not set we're not happy
     if [ -z "$JAVA_HOME" ]; then
       echo "You must set the JAVA_HOME variable before running CARBON."
       exit 1
     fi
-
     if [ -e "$RUNTIME_HOME/runtime.pid" ]; then
       PID=`cat "$RUNTIME_HOME"/runtime.pid`
     fi
-
     # ----- Process the input command ----------------------------------------------
     args=""
     for c in $*
@@ -185,7 +167,6 @@ data:
             args="$args $c"
         fi
     done
-
     if [ "$CMD" = "--debug" ]; then
       if [ "$PORT" = "" ]; then
         echo " Please specify the debug port after the --debug option"
@@ -223,7 +204,6 @@ data:
             ps -p$pid 2>&1 > /dev/null
             process_status=$?
       done
-
     # using nohup bash to avoid erros in solaris OS.TODO
       nohup bash $RUNTIME_HOME/bin/carbon.sh $args > /dev/null 2>&1 &
       exit 0
@@ -233,7 +213,6 @@ data:
       cat $CARBON_HOME/bin/kernel-version.txt
       exit 0
     fi
-
     # ---------- Handle the SSL Issue with proper JDK version --------------------
     java_version=$("$JAVACMD" -version 2>&1 | awk -F '"' '/version/ {print $2}')
     java_version_formatted=$(echo "$java_version" | awk -F. '{printf("%02d%02d",$1,$2);}')
@@ -241,7 +220,6 @@ data:
        echo " Starting WSO2 Carbon (in unsupported JDK)"
        echo " [ERROR] CARBON is supported only on JDK 1.8 and 11"
     fi
-
     CARBON_XBOOTCLASSPATH=""
     for f in "$CARBON_HOME"/bin/bootstrap/xboot/*.jar
     do
@@ -249,9 +227,7 @@ data:
             CARBON_XBOOTCLASSPATH="$CARBON_XBOOTCLASSPATH":$f
         fi
     done
-
     JAVA_ENDORSED_DIRS="$CARBON_HOME/bin/bootstrap/endorsed":"$JAVA_HOME/jre/lib/endorsed":"$JAVA_HOME/lib/endorsed"
-
     CARBON_CLASSPATH=""
     if [ -e "$JAVA_HOME/bin/bootstrap/tools.jar" ]; then
         CARBON_CLASSPATH="$JAVA_HOME/lib/tools.jar"
@@ -278,35 +254,27 @@ data:
       CARBON_CLASSPATH=`cygpath --path --windows "$CARBON_CLASSPATH"`
       CARBON_XBOOTCLASSPATH=`cygpath --path --windows "$CARBON_XBOOTCLASSPATH"`
     fi
-
     # ----- Execute The Requested Command -----------------------------------------
-
     echo JAVA_HOME environment variable is set to $JAVA_HOME
     echo CARBON_HOME environment variable is set to $CARBON_HOME
     echo RUNTIME_HOME environment variable is set to $RUNTIME_HOME
-
     cd "$RUNTIME_HOME"
-
     START_EXIT_STATUS=121
     status=$START_EXIT_STATUS
-
     #To monitor a Carbon server in remote JMX mode on linux host machines, set the below system property.
     #   -Djava.rmi.server.hostname="your.IP.goes.here"
-
     JAVA_VER_BASED_OPTS=""
     if [ $java_version_formatted -le 0108 ]; then
         JAVA_VER_BASED_OPTS="-Djava.endorsed.dirs=$JAVA_ENDORSED_DIRS"
     fi
-
     if [ $java_version_formatted -ge 1100 ] ; then
         JAVA_VER_BASED_OPTS="--add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED"
     fi
-
     while [ "$status" = "$START_EXIT_STATUS" ]
     do
         $JAVACMD \
         -Xbootclasspath/a:"$CARBON_XBOOTCLASSPATH" \
-        -Xms256m -Xmx1024m \
+        -Xms{{ .Values.wso2.deployment.analytics.dashboard.resources.jvm.heap.memory.xms }} -Xmx{{ .Values.wso2.deployment.analytics.dashboard.resources.jvm.heap.memory.xmx }} \
         -XX:+HeapDumpOnOutOfMemoryError \
         -XX:HeapDumpPath="$RUNTIME_HOME/logs/heap-dump.hprof" \
         $JAVA_OPTS \
@@ -326,7 +294,7 @@ data:
         -Djavax.net.ssl.keyStorePassword="wso2carbon" \
         -Djavax.net.ssl.trustStore="$CARBON_HOME/resources/security/client-truststore.jks" \
         -Djavax.net.ssl.trustStorePassword="wso2carbon" \
-        -Dfeign.httpclient.disableSslValidation=true \
+        -Dio.netty.tryReflectionSetAccessible=false \
         org.wso2.carbon.launcher.Main $*
         status=$?
     done

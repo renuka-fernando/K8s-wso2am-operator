@@ -181,6 +181,12 @@ data:
     #enable_forum = true
     #enable_anonymous_mode=true
 
+    [apim.cors]
+    allow_origins = "*"
+    allow_methods = ["GET","PUT","POST","DELETE","PATCH","OPTIONS"]
+    allow_headers = ["authorization","Access-Control-Allow-Origin","Content-Type","SOAPAction","apikey", "testKey"]
+    allow_credentials = false
+
     #[apim.throttling]
     #enable_data_publishing = true
     #enable_policy_deploy = true
@@ -256,12 +262,6 @@ data:
     #persistent_notifier.ttl = 5000
     #persistent_notifier.username = "root"
     #persistent_notifier.password = "root"
-
-    [apim.cors]
-    allow_origins = "*"
-    allow_methods = ["GET","PUT","POST","DELETE","PATCH","OPTIONS"]
-    allow_headers = ["authorization","Access-Control-Allow-Origin","Content-Type","SOAPAction","apikey"]
-    allow_credentials = false
 
     [[event_handler]]
     name="userPostSelfRegistration"
